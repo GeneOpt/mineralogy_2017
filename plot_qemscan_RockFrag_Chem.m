@@ -40,6 +40,12 @@ mineralsA = {'Quartz','K Feldspar','Plagioclase','Muscovite','Biotite','Kaolinit
     'Titanite','Laumontite','Clinopyrozene','Fe Amphibole','Epidote-Zoisite',...
     'Apatite','Tourmaline','Zircon','Aluminum Oxide','Total'};
 
+elements = varMD(2,6:end)
+elements2 = {'Si','Al','Ba','Be','Ca','Cr','Cu','Fe','K','Li','Mg','Mn','Ni',...
+    'P','Sc','Ti','V','Zn','As','Cd','Ce','Co','Cd','Dy','Er','Eu','Ga','Gd',...
+    'Hf','Ho','La','Lu','Mo','Nb','Nd','Pb','Pr','Rb','Sb','Sm','Tb','Th',...
+    'Tm','U','Y','Yb','Zr'}
+
 labels = var_BMMP_F(2:end,1);
 ccat = [1,2,[3,4,5,6],7,[8,9,10,11],12,[13,14],15,16,[17,18],19,[20,21],22,23,24,25,[26,27],28,29,30,31,32,33,34,35,37,39];
 
@@ -53,7 +59,6 @@ ccat = [1,2,[3,4,5,6],7,[8,9,10,11],12,[13,14],15,16,[17,18],19,[20,21],22,23,24
 
     datMtx = dat
     abv = 0
-    abv2 = 1
     if abv == 1
     minerals = mineralsA
     datMtx = [dat(:,1:2),sum(dat(:,3:6),2),dat(:,7),sum(dat(:,8:11),2),...
@@ -61,11 +66,32 @@ ccat = [1,2,[3,4,5,6],7,[8,9,10,11],12,[13,14],15,16,[17,18],19,[20,21],22,23,24
         dat(:,19),sum(dat(:,20:21),2),dat(:,22:25),sum(dat(:,26:27),2),...
         dat(:,28:35),dat(:,37),dat(:,39)];
     end
+    
+    abv2 = 0
     if abv2 == 1
     minerals = mineralsA2
     datMtx = dat(:,[3,4,5,6,8,9,10,11,13,14,17,18,20,21,26,27]);
     end
-
+    
+    abv3 = 1
+    if abv3 == 1
+    minerals = minerals([1:35,37])
+    dat = dat(:,[1:35,37]);
+    end
+    
+    abvChem = 1
+    
+    if abvChem == 1
+        elems = elements2
+        j = 1
+        el1 = []
+        for i = 1:length(elements2)
+            el1(i) = find(strcmp(elements,elements2(i)))
+        end
+        datMtx = datMD(:,el1)
+    end
+    
+            
     srtin = 0
     if srtin == 1
         [s,ia] = sort(sum(datMtx,1),'descend')
@@ -206,7 +232,28 @@ for i = 1:length(minerals)
 end
 
 
-%% do some PCA on the datas, first stargin with the bulk mineralogy. This seems like a slight waste of time right now. So moving on. 
+%% here you can just make a few colormaps from the correlations to see who's who in the zoo
+datIN = [dat,datMtx]
+cdm = corr(datIN)
+limC = -0.75
+nx = floor((limC+1)*32)
+limC2n = -1+(nx/32)
+limC2p = -limC2n
+cdm(logical(((cdm<limC2p)+(cdm>-limC2n))==2))=0
+labels = [minerals,elements2]
+fx = figure
+pcolor(cdm)
+colorbar
+cm = colormap(jet)
+lcm = length(cm(nx:end-nx,:))
+cm(nx:end-nx,:)=ones([lcm,3])
+colormap(cm)
+caxis([-1 1])
+set(gca,'xtick',1.5:1:length(labels),'xticklabel',labels)
+set(gca,'ytick',1.5:1:length(labels),'yticklabel',labels)
+%% do some PCA on the datas, first stargin with the bulk mineralogy. This seems like a slight waste of time right now. So moving on.
+
+
 close all
 varCov = corr(dat);
 [ve,va] = eig(varCov);
