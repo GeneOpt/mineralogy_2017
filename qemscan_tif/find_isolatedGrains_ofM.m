@@ -135,7 +135,7 @@ for H = 1:2
     end
 
 
-        %% grid search
+    %% grid search
     %%% now you have to do this for each mineral
     
     Mineral = min_col(2,:)

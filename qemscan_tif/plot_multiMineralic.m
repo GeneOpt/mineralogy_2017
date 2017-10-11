@@ -149,13 +149,13 @@ end
 end
 
 %% loop through all the files and put the arrays into a matrix SED 
-folderS = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_image_data\isolated_grains\seds\';
+folderS = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_image_data\mineral_clusters\seds\';
 nmsFolS = dir([folderS '*.mat'])
 matNmFlS = {nmsFolS.name}
 matNmFlS = matNmFlS(1:end)
 
 %% loop through all the files and put the arrays into a matrix ROCK
-folderR = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_image_data\isolated_grains\rock\';
+folderR = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_image_data\mineral_clusters\rock\';
 nmsFolR = dir([folderR '*.mat'])
 matNmFlR = {nmsFolR.name}
 matNmFlR = matNmFlR(1:end)
