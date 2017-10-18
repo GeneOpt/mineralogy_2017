@@ -4,11 +4,12 @@ clear variables
 
 run mineral_colors
 
-folder = 'D:\Field_data\2013\Summer\Geochemistry\qemscan_edited\images\rock_frags\first_set_M18152\25-1 micron\';
+folder = 'D:\Field_data\2013\Summer\Geochemistry\qemscan_edited\images\revisedColors\rock_frags\MI8152-AUG16\1 - 25 um\';
 [nms] = dir([folder '\*.TIF'])
 matNm = {nms.name}
 
-for H = 1
+
+for H = 1:length(matNm)
     fname = [folder matNm{H}];
     
     nm = matNm{H};
@@ -131,10 +132,12 @@ for H = 1
         I_mtx(I_mtx==xU(i))=xArr(i);
     end
 
+   
 
     %% size and mineralogy
     clc
     mnrlMtx = zeros(length(xU),length(mins));
+    I_mtx_C = zeros(size(I_mtx));
 
     for i = 1:length(xU)
     %     figure
@@ -152,16 +155,17 @@ for H = 1
             cl = int32(rc(2));   
             rgbAr = [Irgb(rw,cl,1),Irgb(rw,cl,2),Irgb(rw,cl,3)];
             diffMtx = min_col-rgbAr;
-            el_k = find(sum(abs(diffMtx),2)==0);
+            el_k = find(sum(abs(diffMtx),2)==0);          
             M_Arr(el_k) = M_Arr(el_k)+1;
+            I_mtx_C(rw,cl) = el_k;
 
         end
         mnrlMtx(i,:)=M_Arr;
-
+ 
     end
 
     %%
-%     save(['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_image_data\isolated_grains\rock\' img '.mat'],'mnrlMtx')
+    save(['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\rock\' img '.mat'],'I_mtx','I_mtx_C','mnrlMtx')
 
 end
 
