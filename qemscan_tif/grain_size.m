@@ -4,7 +4,7 @@ clear variables
 
 run mineral_colors
 
-sf = 25/38;
+scf = 25/38;
 
 % here you are taking the .mat files generated from 'find_isolatedGrains',
 % where minerals are already tagged and numbered
@@ -25,8 +25,8 @@ for H = 3:23
             for N = 1:numG
 
                 numPix = sum(sum(I_mtx==N));
-                D(N) = sqrt(numPix*(sf^2)*4/pi);
-                Ar(N) = sqrt(numPix*(sf^2));
+                D(N) = sqrt(numPix*(scf^2)*4/pi);
+                Ar(N) = sqrt(numPix*(scf^2));
 
             end
         save([folder matNm{H} '\' fileName{F}],'D','Ar','-append')

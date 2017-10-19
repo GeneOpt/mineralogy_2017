@@ -4,12 +4,12 @@ clear variables
 
 run mineral_colors
 
-folder = 'D:\Field_data\2013\Summer\Geochemistry\qemscan_edited\images\rock_frags\second_set_M18182\1-25um\';
+folder = 'D:\Field_data\2013\Summer\Geochemistry\qemscan_edited\images\revisedColors\rock_frags\MI8152-AUG16\1 - 25 um\';
 [nms] = dir([folder '\*.TIF'])
 matNm = {nms.name}
 
-% for H = 1:length(matNm)-1
-    for H = 2
+for H = 1:length(matNm)
+%     for H = 2
     fname = [folder matNm{H}];
     
     nm = matNm{H};
@@ -20,7 +20,7 @@ matNm = {nms.name}
         end
         
     end
-    
+ 
     [I,cmap] = imread(fname);
 
     Irgb = ind2rgb(I,cmap);
@@ -272,6 +272,7 @@ matNm = {nms.name}
 
     end
     %%
+    return
     save(['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_image_data\mineral_clusters\rock\' img '.mat'],'clustM','I_mtx','I_mtxM')
 
 end

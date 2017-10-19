@@ -4,12 +4,12 @@ clear variables
 
 run mineral_colors
 
-folder = 'D:\Field_data\2013\Summer\Geochemistry\qemscan_edited\images\rock_frags\second_set_M18182\1-25um\';
+folder = 'D:\Field_data\2013\Summer\Geochemistry\qemscan_edited\images\revisedColors\rock_frags\MI8152-AUG16_needs to ne redone\1 - 25 um\';
 [nms] = dir([folder '\*.TIF'])
 matNm = {nms.name}
 
 % for H = 1:length(matNm)-1
-for H = 1
+for H = 2:3
     fname = [folder matNm{H}];
     
     nm = matNm{H};
@@ -316,6 +316,7 @@ for H = 1
         %             p3 = plot(theta_j,R_j,'b+');
         %             hold on
                 tjD = theta_j(elD);
+                if length(tjD)>2
                 RjD = R_j(elD);
         %         plot(tjD,RjD,'mo')
         %             xlabel('Angle (radian)','fontsize',fs4)
@@ -482,6 +483,7 @@ for H = 1
                     fSpec(countP,:)= g;
                     mnrlMtxP(countP,:) = mnrlMtx(i,:);
                     countP = countP+1;
+                end
              end
 
         end
