@@ -10,8 +10,10 @@ H = [];
 count = 1;
 nRow = size(MnrlMtx,1);
 
-for i = 1:nRow
-    a = MnrlMtx(i,:);
+% for i = 1:nRow
+%     a = MnrlMtx(i,:);
+    
+    a = MnrlMtx;
     na = (a/sum(a));
     grain = sort(na,'descend');
     t = zeros(1,length(na)-1);
@@ -21,4 +23,4 @@ for i = 1:nRow
     end
     H(count) = t(end);
     count = count+1;
-end
+% end
