@@ -1,6 +1,4 @@
-% this script is used to generate I and P plots for all glaciers in the
-% islands\sizeDist folder. Each glacier has its own plot and is plotted
-% with sediment and rock.
+% this script ended by adding BH to I and P distribution plots for GL1 
 
 clear all
 close all
@@ -34,7 +32,8 @@ colR = [0.3 0.3 0.3;1 0 0];
 colS = [0.7 0.7 0.7;1 0 1];
 
 
-for i = 1:length(matNmS)
+% for i = 1:length(matNmS)
+for i = 1
 
     mm = struct
     mnrlS = []
@@ -42,10 +41,12 @@ for i = 1:length(matNmS)
     gR = []
     mns = matNmS{i};
     varS = load([folderS mns])
-    
-    fn = ['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\islands\sizeDist\bins10\' matNmS{i}(1:5)]
-    mkdir(fn)
+    varB = load([folderS matNmS{21}])
 
+    
+    fn = ['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\islands\sizeDist\bins10\' matNmS{i}(1:5) '\with_BH']
+    mkdir(fn)
+    
     islS = varS.isleD;
     ptcS = varS.ptclD;
     gS = varS.D_c;
@@ -66,8 +67,7 @@ for i = 1:length(matNmS)
     end
    
     
-%     for M = 1:length(fID)
-    for M = 14
+    for M = 1:length(fID)
         close all
         p = [];
         
@@ -135,28 +135,61 @@ for i = 1:length(matNmS)
         end
         
         
-      
+        %% borehole
+        islB = varB.isleD;
+        ptcB = varB.ptclD;
+        gB = varB.D_c;
+        mnrl_B = varB.mnrlMtx_c;
+        [mnrlB,minsN,minNFull] = abbvMins(mnrl_B,5);
+        islB_M = islB.(fID{M});
+        
+        cnt = 1;
+        elS = [];
+        
+        for k = 1:size(mnrlB,1)
+            a = mnrlB(k,:);
+            aN = a(M)./sum(a(1:38));
+            if aN>0
+                elB(cnt) = k;
+                cnt = cnt+1;
+            end
+            
+        end         
+        
+        D_mB = gB(elB);
+        [binC,binC_S,yBinI,mBin,stdBin,sDat] = bin_szHist(islB_M,islB_M);
+        [binC,binC_S,yBinP,mBin,stdBin,sDat] = bin_szHist(D_mB,D_mB);
+
+        p(5) = plot(binC,yBinI/sum(yBinI),'-o','color',[0 0 1],'linewidth',2);
+        hold on
+        p(6) = plot(binC,yBinP/sum(yBinP),'--o','color',[0 0 1],'linewidth',2);  
+        
+        legend([p(1) p(2) p(3) p(4) p(5) p(6)],[matNmS{i}(1:5) ' (island)'],[matNmS{i}(1:5) ' (grain)'],...
+        [matNmR{r_i(1)}(1:8) '(island)'],[matNmR{r_i(1)}(1:8) '(grain)'],...
+        [matNmS{21}(1:5) '(island)'],[matNmS{21}(1:5) '(grain)'],...
+        'location','northeast');
+        
         
         grid on
         ylabel('Number of particles (pdf)');
         xlabel('Grain or island size (-\phi)');
         title([matNmS{i}(1:5) ' - ' minsN{M}]);
-        if length(p)==2
-            legend([p(1) p(2)],[matNmS{i}(1:5) ' (island)'],[matNmS{i}(1:5) ' (grain)'],...
-                'location','northeast');
-        end
-        if length(p)==4
-            legend([p(1) p(2) p(3) p(4)],[matNmS{i}(1:5) ' (island)'],[matNmS{i}(1:5) ' (grain)'],...
-                [matNmR{r_i(1)}(1:8) '(island)'],[matNmR{r_i(1)}(1:8) '(grain)'],...
-                'location','northeast');
-        end
-        if length(p)==6
-            legend([p(1) p(2) p(3) p(4) p(5) p(6)],[matNmS{i}(1:5) ' (island)'],[matNmS{i}(1:5) ' (grain)'],...
-                [matNmR{r_i(1)}(1:8) '(island)'],[matNmR{r_i(1)}(1:8) '(grain)'],...
-                [matNmR{r_i(2)}(1:8) '(island)'],[matNmR{r_i(2)}(1:8) '(grain)'],...
-                    'location','northeast');
-        end
-        ylim([0 0.8])
+%         if length(p)==2
+%             legend([p(1) p(2)],[matNmS{i}(1:5) ' (island)'],[matNmS{i}(1:5) ' (grain)'],...
+%                 'location','northeast');
+%         end
+%         if length(p)==4
+%             legend([p(1) p(2) p(3) p(4)],[matNmS{i}(1:5) ' (island)'],[matNmS{i}(1:5) ' (grain)'],...
+%                 [matNmR{r_i(1)}(1:8) '(island)'],[matNmR{r_i(1)}(1:8) '(grain)'],...
+%                 'location','northeast');
+%         end
+%         if length(p)==6
+%             legend([p(1) p(2) p(3) p(4) p(5) p(6)],[matNmS{i}(1:5) ' (island)'],[matNmS{i}(1:5) ' (grain)'],...
+%                 [matNmR{r_i(1)}(1:8) '(island)'],[matNmR{r_i(1)}(1:8) '(grain)'],...
+%                 [matNmR{r_i(2)}(1:8) '(island)'],[matNmR{r_i(2)}(1:8) '(grain)'],...
+%                 'location','northeast');
+%         end
+        return
         set(gca,'fontsize',18);
 
         saveJPGfunction(f1,[fn '\' fID{M}])
