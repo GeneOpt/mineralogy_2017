@@ -1,7 +1,7 @@
 % this sunction is called from plot_multiMineralic and takes the sizes and
 % homogeneity index and bins them in a histogram fashion
 
-function [binC,binC_S,yBin,mBin,stdBin,sDat,sBin] = bin_szHist(x,y)
+function [binC,yBin] = bin_szHist_mnrlMtx(x,mtx,M)
     nPhi = log2(x/1000);
     binLims = -[10.5:-1:5.5];
     bins = length(binLims)-1;
@@ -13,13 +13,7 @@ function [binC,binC_S,yBin,mBin,stdBin,sDat,sBin] = bin_szHist(x,y)
     for ii = 1:bins
 
         inBin = (nPhi<binLims(ii+1))& (nPhi>binLims(ii));
-        yB = y(inBin);
-        yBin(ii) = length(yB);
-        sBin(ii) = sum(yB);
-        mBin(ii) = mean(yB);
-        stdBin(ii) = std(yB);
-        sDat.bin{ii} = inBin;
-
-        
+        yBin(ii) = sum(mtx(inBin,M))/sum(sum(mtx(inBin,1:39)));
+      
     end
 end

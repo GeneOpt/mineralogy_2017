@@ -3,8 +3,8 @@ function [yF,k,lbd] = fitW_J(y)
 % close all
 % plot(y,'-o')
 
-kA = [1.4:0.01:2.1];
-lbdA = [3.3:0.01:6.6];
+kA = [0.1:0.01:5];
+lbdA = [0.1:0.01:5];
 x = 1:length(y);
         
 for i =1:length(kA)

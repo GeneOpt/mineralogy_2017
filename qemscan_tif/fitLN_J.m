@@ -3,8 +3,8 @@ function [yF,mu, s] = fintLN_J(y)
 % close all
 % plot(y,'-o')
 
-sA = [2.8:0.01:3.3];
-muA = [2:0.01:5.5];
+sA = [0.1:0.01:5];
+muA = [0.1:0.01:5];
 x = 1:length(y);
         
 for i =1:length(sA)
