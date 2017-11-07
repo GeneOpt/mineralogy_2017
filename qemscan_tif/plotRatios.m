@@ -3,11 +3,14 @@ close all
 
 run mineral_colors
 
-min1 = find(strcmp(minsN,'Chl Fe'))
-min2 = find(strcmp(minsN,'Bti low'))
+name1 = 'Ab'
+name2 = 'Ill Smec'
 
-vars1 = load('D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\rock\concatenated files\GL01RS01.mat');
-vars2 = load('D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\sed\concatenated files\GL 01.mat')
+min1 = find(strcmp(minsN,name1))
+min2 = find(strcmp(minsN,name2))
+
+vars1 = load('D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\sed\concatenated files\GL 01.mat');
+vars2 = load('D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\sed\concatenated files\GL01B.mat')
 
 mm1 = vars1.mnrlMtx_c;
 mm2 = vars2.mnrlMtx_c;
@@ -17,7 +20,7 @@ for i = 1:length(mm1)
     a11 = mm1(i,min1);
     a12 = mm1(i,min2);
     aT = (a11+a12)./sum(mm1(i,:));
-    if aT>0.1
+    if a11>0.45
         elR(count) = i;
         r1(count) = a11/a12;
         count = count+1;
@@ -29,7 +32,7 @@ for i = 1:length(mm2)
     a11 = mm2(i,min1);
     a12 = mm2(i,min2);
     aT = (a11+a12)./sum(mm2(i,:));
-    if aT>0.1
+    if a11>0.45
         elS(count) = i;
         r2(count) = a11/a12;
         count = count+1;
@@ -57,32 +60,39 @@ close all
 figure
 subplot(2,1,1)
 h = histogram(log(r1),'Normalization','pdf')
+ylabel(['Ratio of ' name1 ' to ' name2])
 title('Rock')
 
 subplot(2,1,2)
 histogram(log(r2),h.BinEdges,'Normalization','pdf')
+ylabel(['Ratio of ' name1 ' to ' name2])
 title('Sed')
 
 %%
 figure
-plot(D_r,log(r1),'r.')
+p1 = plot(D_r,log(r1),'r.')
 hold on
-plot(D_s,log(r2),'k.')
+p2 = plot(D_s,log(r2),'k.')
 grid on
-
+ylabel(['log Ratio of ' name1 ' to ' name2])
+legend([p1 p2],{'rock','sedimet'})
 
 n1 = length(r1)
 n2 = length(r2)
 s_p = sqrt((((n1-1)*std(r1)^2)+((n2-1)*std(r2)^2))/(n1+n2-2))
 t = (mean(r1)-mean(r2))/(s_p*sqrt((1/n1)+(1/n2)))
+% text(0.9,0.1,[],'units','normalized')
 
 %%
 [binC,binC_S,yBinR,mBinR,stdBinR,sDat] = bin_szHist(D_r,log(r1));
 [binC,binC_S,yBinS,mBinS,stdBinS,sDat] = bin_szHist(D_s,log(r2));
 
 figure
-plot(binC,mBinR,'r-o')
+p1 = plot(binC,mBinR,'r-o')
 hold on
-plot(binC,mBinS,'k-^')
+p2 = plot(binC,mBinS,'k-^')
+ylabel(['log [mean ratio of ' name1 ' to ' name2 ']'])
+xlabel('log2 size')
+legend([p1 p2],{'rock','sedimet'})
 
 

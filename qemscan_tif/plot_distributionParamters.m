@@ -10,8 +10,8 @@ dummyV = load([folderR 'GL01RS01.mat']);
 ID = dummyV.isleD;
 fID = fields(ID)
 
-varLabs = {'m (fractal)','b (fractal)','r (fractal)','','','',...
-    'k (Weibull)', '\lambda (Weibull)','r (Weibull)','','','',...
+varLabs = {'m (fractal)','b (fractal)','r (fractal)',...
+    'k (Weibull)', '\lambda (Weibull)','r (Weibull)',...
     '\mu (log normal)', '\sigma (log normal)','r (log normal)'}
 
 folderS = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\fitGSD\islands\sed\'
@@ -28,7 +28,7 @@ fNmS = fNmS(3:23)
 p1 = find(strcmp(varLabs,'r (fractal)'))
 p2 = find(strcmp(varLabs,'r (Weibull)'))
 
-M = find(strcmp(fID,'Chl_Mg'))
+M = find(strcmp(fID,'Ab'))
 
 for i = 1:length(fNmS)
     x1(i) = paramM(M,p1,i);
@@ -36,6 +36,9 @@ for i = 1:length(fNmS)
 end
 
 %%
+xlm = 0.2
+ylm = 0.2
+
 colA = [0.7 0.7 0.7;1 0.7 0.7]
 mt = {'^','o'}
 
@@ -50,8 +53,8 @@ for i = 1:length(fNmS)
 end
 title(['Sediment'])
 grid on 
-xlim([0 0.5])
-ylim([0 0.15])
+xlim([0 xlm])
+ylim([0 ylm])
 xlabel(varLabs{p1})
 ylabel(varLabs{p2})
 %% for the rock 
@@ -87,7 +90,7 @@ for i = 1:length(fNmS)
 end
 title(['Rock - ' fID{M}])
 grid on 
-xlim([0 0.5])
-ylim([0 0.15])
+xlim([0 xlm])
+ylim([0 ylm])
 xlabel(varLabs{p1})
 ylabel(varLabs{p2})

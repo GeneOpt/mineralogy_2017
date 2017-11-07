@@ -96,14 +96,14 @@ labelS = labelS(keepLabS-1)
 
 
 %% plot individual ratios
-% 
-% elR = find(strcmp(samplesR,'GL01_1'))
-% elS = find(strcmp(samplesS,'GL 01'))
-% elM2 = find(strcmp(minsN,'Bti Mg'))
-% elM1 = find(strcmp(minsN,'ill Smec'))
-% 
-% rR = massProck(elR,elM1)/massProck(elR,elM2)
-% rS = massPsed(elS,elM1)/massProck(elS,elM2)
+
+elR = find(strcmp(samplesR,'GL01_1'))
+elS = find(strcmp(samplesS,'GL 01'))
+elM1 = find(strcmp(minsN,'Ill Smec Fe'))
+elM2 = find(strcmp(minsN,'Bti Fe'))
+
+rR = massProck(elR,elM1)/massProck(elR,elM2)
+rS = massPsed(elS,elM1)/massProck(elS,elM2)
 
 %% in this plot you can plot the glacier on x axis and the the rock and sed mass percent both 
 % show up on the y axis
@@ -115,15 +115,21 @@ close all
 % massPr = massProck(:,justClay)
 % mprN = massPr./repmat(sum(massPr,2),[1,length(justClay)]);
 
-% mpsN = massPsed(:,elM1)./massPsed(:,elM2);
-% mprN = massProck(:,elM1)./massProck(:,elM2);
+mpsN1 = massPsed(:,elM1);
+mpsN2 = massPsed(:,elM2);
+mprN1 = massProck(:,elM1);
+mprN2 = massProck(:,elM2);
 
 % mnrl = 'Qtz'
 % for j = 1:length(minsN)
-min1 = find(strcmp(minsN,'Bti Fe'))
-for j = min1
+for j = 1
     f1 = figure
-    subplot(2,1,1)
+ 
+
+    % elM = find(strcmp(mnrl,minsN))
+    M_s1 = mpsN1(:,j)
+    M_s2 = mpsN2(:,j)
+
 
     colA = [0.7 0.7 0.7;1 0.7 0.7]
     mt = {'^','o'}
@@ -131,75 +137,38 @@ for j = min1
     for i = 1:length(xValS)
 
         hold on
-        plot(xValS(i),massPsed(i,j),['k' mt{mxS(i)+1}],'markerfacecolor', colA(stS(i)+1,:))
-        text(xValS(i),massPsed(i,j),labelS{i})
+        plot(M_s1(i),M_s2(i),['k' mt{mxS(i)+1}],'markerfacecolor', colA(stS(i)+1,:))
+        text(M_s1(i),M_s2(i),labelS{i})
 
     end
 
     hold on
+    M_r1 = mprN1(:,j)
+    M_r2 = mprN2(:,j)
+    
     colA = [0.1 0.1 0.1;1 0 0]
     mt = {'o','^'}
 
     for i = 1:length(xValR)
 
         hold on
-        plot(xValR(i),massProck(i,j),['k' mt{msR(i)+1}],'markerfacecolor', colA(stR(i)+1,:))
-        text(xValR(i),massProck(i,j),labelR{i})
+        plot(M_r1(i),M_r2(i),['k' mt{msR(i)+1}],'markerfacecolor', colA(stR(i)+1,:))
+        text(M_r1(i),M_r2(i),labelR{i})
 
     end
-    xlim([0 22])
+%     xlim([0 22])
     grid on
-    ylabel(minsN(min1))
-
+    ylabel(minsN{elM2})
+    xlabel(minsN{elM1})
+%     title([minsN{elM1} ' / ' minsN{elM2}])
     % XX = 1:length(labelS)
-    set(gca(),'XTickLabel',[])
+%     set(gca(),'XTickLabel',[])
     set(gca,'fontsize',18)
     % rotateXLabels(gca(),60)
-
-
-%% in this plot you can make a scatter plot of the difference between rock and sed. 
-
-    % mnrl = 'Qtz'
-    subplot(2,1,2)
-%     for j = 1:length(minsN)
-
-
-        % elM = find(strcmp(mnrl,minsN))
-%         M_s = massPsed(:,j)
-% 
-%         M_r = massProck(:,j)
-% 
-        colA = [0.3 0.3 0.3;1 0.2 0.2]
-%         mt = {'o','^'}
-        diff_A = []
-        for i = 1:length(xValR)
-
-            xV = xValR(i)
-            el = find(xValS==xV)
-            el = el(1)
-            M_si = M_s(el)
-            M_diff = M_si-M_r(i)
-
-            hold on
-            plot(xValR(i),M_diff,['k' mt{msR(i)+1}],'markerfacecolor', colA(stR(i)+1,:))
-            text(xValR(i),M_diff,labelR{i})
-            M_diffA(i) = M_diff
-
-        end
-%         M_diffA(2) = []
-        mDA = nanmean(M_diffA)
-        [h,p] = ttest(M_diffA)
-        text(0.1,0.1,['\mu = ' num2str(mDA,2) ', p = ' num2str(p,2)],'units','normalized')
-
-        xlim([0 22])
-        grid on 
-%         title(minsN{j})
-        ylabel('difference in ratio (sediment - rock)')
-        set(gca,'fontsize',18)
-        set(gca(),'XTickLabel',[])
 return
-        savePDFfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\massPercent\ratios\' minsN{elM1} '_' minsN{elM2}])
-        saveJPGfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\massPercent\ratios\' minsN{elM1} '_' minsN{elM2}])
+
+    savePDFfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\massPercent\ratios\' minsN{elM1} '_' minsN{elM2}])
+    saveJPGfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\massPercent\ratios\' minsN{elM1} '_' minsN{elM2}])
     %%
         % XX = 1:length(labelS)
         % set(gca(),'XTick',XX, 'XTickLabel',labelS)

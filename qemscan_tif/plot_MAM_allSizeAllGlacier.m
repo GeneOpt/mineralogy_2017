@@ -22,11 +22,12 @@ folderS = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revise
 [nmsS] = dir([folderS '\*.mat']);
 matNmS = {nmsS.name}
 % for H = 3:28  % for the rock
-% for H = 1:length(matNm)    % for the sediment
-for Hs = 19
+for Hs = 1:length(matNmS)    % for the sediment
+% for Hs = 21
 
 
     mns = matNmS{Hs};
+
     varS = load([folderS mns])
     fNm = ['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\together\' mns(1:5) '\'];
     mkdir(fNm)
@@ -96,7 +97,7 @@ for Hs = 19
         set(gca,'xtick',1:length(minsN),'xticklabel',minsN(isr))
         rotateXLabels(gca,60)
         set(gca,'fontsize',17) 
-        
+        return
             
         saveJPGfunction(f1,[fNm mins{P}])
         savePDFfunction(f1,[fNm mins{P}])

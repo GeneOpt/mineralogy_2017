@@ -6,7 +6,7 @@ run mineral_colors
 
 folder = 'D:\Field_data\2013\Summer\Geochemistry\qemscan_edited\images\revisedColors\sediment\MI8118-APR16\1 - 25 um\';
 img_num = '';
-img = 'GL01B_03';
+img = 'GL 09_01';
 f_img = [img img_num];
 fname = [folder img img_num '.TIF'];
 [I,cmap] = imread(fname);
@@ -19,10 +19,9 @@ Ir = Irgb(:,:,1);
 Ig = Irgb(:,:,2);
 Ib = Irgb(:,:,3);
 
-
 %% Plot select minerals
 
-mineral = 'AlOx';
+mineral = 'Ab';
 minRGB = min_col(find(strcmp(mins,mineral)),:);
 cols = [0 0 0];
 [newIo] = keepOnly(Ir,Ig,Ib,minRGB,0,cols);

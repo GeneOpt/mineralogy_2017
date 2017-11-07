@@ -3,7 +3,7 @@ close all
 run loadSample_specs
 run mineral_colors.m
 
-fOut = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\areaDistributions\islandDistributions\bins5\allTogetherNow\'
+fOut = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\fitGSD\'
 mkdir(fOut)
 
 folderR = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\rock\concatenated files\';
@@ -19,7 +19,7 @@ colS = [0.7 0.7 0.7;1 0 1];
 sS = {'-','--'}
 sR = {'-','--'}
 
-for M = 1:44
+for M = 1
     f1 = figure
     subplot(1,2,1)
     hold on
@@ -30,28 +30,22 @@ for M = 1:44
         [mtxM,minsN,minNFull] = abbvMins(mtx_M,5);
 %         M_i = mtxM(:,M)./sum(mtxM(:,1:39),2);
         M_i = mtxM(:,M);
-        islD = varsR 
-        
-        [binC,yBin] = bin_szHist_mnrlMtx(D,mtxM,M); % this is if normalizing by total of all minerals in a bin
-        y = yBin;
-        
-%         [binC,binC_S,yBin,mBin,stdBin,sDat,sBin] = bin_szHist(D,M_i);
-%         %this is if normalizing by mineral across all sizes
-%         y = (sBin/sum(sBin));
-
+        [binC,binC_S,yBin,mBin,stdBin,sDat,sBin] = bin_szHist(D,D);
+        y = (yBin/sum(yBin));
         p1(i) = plot(binC,y,sR{stR(i)+1},'color',colR(prR(i)+1,:),'linewidth',1);
         if i == 18
             p1(i) = plot(binC,y,sR{stR(i)+1},'color',[1 0.5 0.5],'linewidth',1);
-        end      
+        end     
+        yl1(i) = max(y);
     end
     title('Rock')
 %     text(0.1,0.9,minsN{M})
     grid on
     xlabel('Grain size (-\phi)')
-    ylabel(['Area of ' minsN{M} ' NBB (pdf)'])
+    ylabel(['Area of ' minsN{M} ' (pdf)'])
     set(gca,'fontsize',18)
     xlim([-10.5 -5.5]);
-    yl1 = get(gca,'ylim');
+
     
     subplot(1,2,2)
     hold on
@@ -62,14 +56,10 @@ for M = 1:44
         [mtxM,minsN,minNFull] = abbvMins(mtx_M,5);
 %         M_i = mtxM(:,M)./sum(mtxM(:,1:39),2);
         M_i = mtxM(:,M);
-  
-        [binC,yBin] = bin_szHist_mnrlMtx(D,mtxM,M); % this is if normalizing by total of all minerals in a bin
-        y = yBin;
-        
-%         [binC,binC_S,yBin,mBin,stdBin,sDat,sBin] = bin_szHist(D,M_i);
-%         %this is if normalizing by mineral across all sizes
-%         y = (sBin/sum(sBin));
+        [binC,binC_S,yBin,mBin,stdBin,sDat,sBin] = bin_szHist(D,D);
+        y = (yBin/sum(yBin));
         p2(i) = plot(binC,y,sS{stS(i)+1},'color',colS(mxS(i)+1,:),'linewidth',1)    
+        yl2(i) = max(y);
     end
     title('Sediment')
     xlabel('Grain size (-\phi)')
@@ -77,21 +67,19 @@ for M = 1:44
     xlim([-10.5 -5.5])
     set(gca,'fontsize',18)
     l1 = legend([p1(2),p1(4),p1(18),p1(1),p2(2),p2(3),p2(14),p2(1)],...
-        {'MSNS','MSS','PNS','PS','MSNS','MSS','MXNS','MXS'},'position',[0.1623    0.6033    0.0805    0.3724],...
+        {'MSNS','MSS','PNS','PS','MSNS','MSS','MXNS','MXS'},'position',[0.3879    0.6499    0.0536    0.2338],...
         'units','normalized');
-    yl2 = get(gca,'ylim');
-    yMaxP = max([yl1(2) yl2(2)]);
+    yMaxP = max([yl1, yl2]);
     ymP(M) = yMaxP;
     
     for sp = 1:2
         subplot(1,2,sp)
         ylim([0 yMaxP])
     end
-
-    saveJPGfunction(f1,[fOut minsN{M}])
-    savePDFfunction(f1,[fOut minsN{M}])
     
-    close all
+    saveJPGfunction(f1,[fOut 'GSD_all'])
+    savePDFfunction(f1,[fOut 'GSD_all'])
+
     
 end
     

@@ -63,8 +63,8 @@ folderS = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revise
 matNmS = {nmsS.name}
 
 
-min1 = find(strcmp(minsN,'Chl Fe'))
-min2 = find(strcmp(minsN,'Ab'))
+min1 = find(strcmp(minsN,'Ab'))
+min2 = find(strcmp(minsN,'Bti low'))
 
 %%
 f1 = figure
@@ -104,7 +104,7 @@ for Hr = 1:length(xValR)    % for the sediment
     colA = [0.3 0.3 0.3;1 0.2 0.2];
 
     hold on
-    plot(xValR(Hr),yVal,['k' mt{msR(Hr)+1}],'markerfacecolor', colA(stR(Hr)+1,:))
+    plot(xValR(Hr),yVal,['k' mt{prR(Hr)+1}],'markerfacecolor', colA(stR(Hr)+1,:))
     text(xValR(Hr),yVal,labelR{Hr})
 
 end
@@ -112,7 +112,9 @@ end
 grid on
 title(['Percent ' minsN{min1} ' neighbouring ' minsN{min2}])
 ylabel('%')
+xlim([0 max(xValR)+1])
 set(gca,'XtickLabel',[],'fontsize',18)
+return
 saveJPGfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\binary\' mins{min1} '_' mins{min2}])
 savePDFfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\binary\' mins{min1} '_' mins{min2}])
 

@@ -1,96 +1,120 @@
+clear all
+close all
 run loadSample_specs
+run mineral_colors.m
 
-varS = load('D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\sed\concatenated files\GL 01.mat')
-varR = load('D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\sed\concatenated files\GL01B.mat')
-MAM_cS = varS.MAM_c;
-MAM_cR = varR.MAM_c;
-MAM_all_cS = varS.MAM_all_c;
-MAM_all_cR = varR.MAM_all_c;
+%% sample specs for rock
 
-AbM = 1
+% samplesR = {'GL01_1','GL02_2','GL04_1','GL05_1','GL06_2','GL06_4','GL07_1',...
+%     'GL08_2','GL09_A','GL09_B','GL10_1','GL10_2','GL11_1','GL11_2','GL14_2',...
+%     'GL14_3','GL16_1','GL16_2','GL17_1','GL18_1','GL18_2','GL19_1','GL19_2',...
+%     'GL20_1','GL20_2','GL21_1'}; the entire suite
+samplesR = {'GL01_1','GL02_2','GL04_1','GL05_1','GL06_2','GL06_4','GL07_1',...
+    'GL08_2','GL09_A','GL09_B','GL10_1','GL10_2','GL11_1','GL11_2','GL14_2',...
+    'GL14_3','GL16_1','GL16_2','GL17_1','GL18_1','GL18_2','GL19_1','GL19_2',...
+    'GL20_1','GL20_2','GL21_1'};
+labelR = {'1','2','4','5','6a','6b','7','8','9a','9b','10a','10b','11a',...
+    '11b','14a','14b','16a','16b','17','18a','18b','19a','19b','20a','20b','21'}
+xValR = [16 1 2 6 7 7 8 17 3 3 4 4 9 9 18 18 12 12 13 19 19 20 20 14 14 15]
 
-if AbM == 1
-    [MAM_cS,minsN,minNFull] = abbvMins(MAM_cS,4)
-    [MAM_cR,minsN,minNFull] = abbvMins(MAM_cR,4)
-    [MAM_all_cS] = abbvMins(MAM_all_cS,3)
-    [MAM_all_cR] = abbvMins(MAM_all_cR,3)
+for i = 1:length(samplesR)
+    keepLabR(i) = find(strcmp(varsR(:,8),samplesR(i)))
 end
 
-%% make an correlation plot of the MAM_all matrix for sed
+stR = strcmp(varsR(keepLabR,2),'S')
+nstR = strcmp(varsR(keepLabR,2),'NS')
+gtR = varsR(keepLabR,2)
+prR = strcmp(varsR(keepLabR,3),'P')
+msR = strcmp(varsR(keepLabR,3),'MS')
+groupR = datR(keepLabR-1,7)
+
+
+%% sample specs for sediment
+% samplesS = {'GL 01','GL 02','GL 03','GL 04','GL 05','GL 06','GL 07','GL 08',...
+%     'GL 09','GL 10','GL 11','GL 13','GL 14','GL 15','GL 16','GL 17','GL 18',...
+%     'GL 19','GL 20','GL 21','GL1_1'}; the entire suite
+samplesS = {'GL 01','GL 02','GL 03','GL 04','GL 05','GL 06','GL 07','GL 08',...
+    'GL 09','GL 10','GL 11','GL 13','GL 14','GL 15','GL 16','GL 17','GL 18',...
+    'GL 19','GL 20','GL 21','GL1_1'};
+labelS = {'1','2','3','4','5','6','7','8','9','10','11','13',...
+    '14','15','16','17','18','19','20','21','BH_1'}
+xValS = [16 1 5 2 6 7 8 17 3 4 9 10 18 11 12 13 19 20 14 15 16]   
+
+
+for i = 1:length(samplesS)
+    keepLabS(i) = find(strcmp(varsS(:,6),samplesS(i)))
+end
+
+stS = strcmp(varsS(keepLabS,2),'S')
+nstS = strcmp(varsS(keepLabS,2),'NS')
+gtS = varsS(keepLabS,2)
+mxS = strcmp(varsS(keepLabS,3),'MX')
+msS = strcmp(varsS(keepLabS,3),'MS')
+groupS = datS(keepLabS-1,5)
+labelS = labelS(keepLabS-1)
+%%
+
+folderR = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\rock\concatenated files\';
+[nmsR] = dir([folderR '\*.mat']);
+matNmR = {nmsR.name}
+
+folderS = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\sed\concatenated files\';
+[nmsS] = dir([folderS '\*.mat']);
+matNmS = {nmsS.name}
+
+
+min1 = find(strcmp(minsN,'Bti low'))
+% min2 = find(strcmp(minsN,'Ab'))
+
+%%
 f1 = figure
-mcs = log(MAM_all_cS./repmat(sum(MAM_all_cS,2),[1,size(MAM_cS,1)])*100)
-imagesc(mcs)
-set(gca,'xtick',1:length(minsN),'xticklabel',minsN)
-rotateXLabels(gca,60)
-set(gca,'ytick',1:length(minsN),'yticklabel',minsN)
-title('Glacier 1 sediment')
-caxis([-6 4])
-colorbar
-% saveJPGfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\mins_abbv\jpg\GL01\GL01_corrAll_sed'])
-% savePDFfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\mins_abbv\pdf\GL01\GL01_corrAll_sed'])
-%% make an correlation plot of the MAM_all matrix for rock
-f2 = figure
-mcr = log(MAM_all_cR./repmat(sum(MAM_all_cR,2),[1,size(MAM_cR,1)])*100)
-imagesc(mcr)
-set(gca,'xtick',1:length(minsN),'xticklabel',minsN)
-rotateXLabels(gca,60)
-set(gca,'ytick',1:length(minsN),'yticklabel',minsN)
-title('Glacier 1 BH')
-caxis([-6 4])
-colorbar
-saveJPGfunction(f2,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\mins_abbv\jpg\GL01\GL01_corrAll_BH'])
-savePDFfunction(f2,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\mins_abbv\pdf\GL01\GL01_corrAll_BH'])
-%% make a correalation plot of the difference
-f3 = figure
-imagesc(mcr-mcs)
-set(gca,'xtick',1:length(minsN),'xticklabel',minsN)
-rotateXLabels(gca,60)
-set(gca,'ytick',1:length(minsN),'yticklabel',minsN)
-title('Glacier 1 BH - sediment')
-caxis([-6 4])
-colorbar
-saveJPGfunction(f3,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\mins_abbv\jpg\GL01\GL01_corrAll_diffBmS'])
-savePDFfunction(f3,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\mins_abbv\pdf\GL01\GL01_corrAll_diffBmS'])
+for Hs = 1:length(xValS)    % for the sediment
+    Hs = 16
 
-[~,isr] = sort(mean(MAM_all_cS),'descend');
+    mns = matNmS{Hs};
+    varS = load([folderS mns]);
+    
+    MAM_cS = varS.MAM_c;
+    MAM_all_cS = varS.MAM_all_c;
+    
+    tArrS = MAM_all_cS(min1,:);
+    numPtS = sum(tArrS);
+    yVal = (MAM_all_cS(min1,min2)/numPtS*100);
 
-for P = 1:29
-    f1 = figure
-%     set(f1, 'Position', [-1279, 508, 1280, 907])
-    
-    for S = 1:4
-        tArr = MAM_cS(P,:,S)
-        tArrS = tArr(isr);
-        numPt = sum(tArrS);
-        hold on
-        y = log10(tArrS/numPt*100);
-        h(S) = plot(y,'k-^','linewidth',S)
-        grid on
-        ylabel(minNFull{P})
-        set(gca,'xtick',1:length(minsN),'xticklabel',minsN(isr))
-        rotateXLabels(gca,60)
-        
-    end
-    
+    colA = [0.7 0.7 0.7;1 0.7 0.7];
+    mt = {'^','o'};
 
-    for S = 1:4
-        tArr = MAM_cR(P,:,S);
-        tArrS = tArr(isr);
-        numPt = sum(tArrS);
-        hold on
-        hR(S) = plot(log10(tArrS/numPt*100),'b-^','linewidth',S)
-    end
-    legend([h(1) h(2) h(3) h(4) hR(1)],{'Seds - \phi>9.5','8.5<\phi<=9.5','7.5<\phi<=8.5','\phi<7.5','BH - \phi>9.5'})
-    title('GL 01, MX-S')
-    set(gca,'fontsize',19)
-    
-    if AbM == 1
-        saveJPGfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\mins_abbv\jpg\GL01\BHSed\GL01_' mins{P} '_BHSed'])
-        savePDFfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\mins_abbv\pdf\GL01\BHSed\GL01_' mins{P} '_BHSed'])
-    end
-    if AbM ~= 1
-        saveJPGfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\all_mins\jpg\GL01\BHSed\GL01_' mins{P} '_BHSed'])
-        savePDFfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\all_mins\pdf\GL01\BHSed\GL01_' mins{P} '_BHSed'])
-    end
+    hold on
+    plot(xValS(Hs),yVal,['k' mt{mxS(Hs)+1}],'markerfacecolor', colA(stS(Hs)+1,:));
+    text(xValS(Hs),yVal,labelS{Hs});
 
 end
+    
+for Hr = 1:length(xValR)    % for the sediment
+
+    mnr = matNmR{Hr};
+    varR = load([folderR mnr]);
+    
+    MAM_cR = varR.MAM_c;
+    MAM_all_cR = varR.MAM_all_c;
+
+    tArrR = MAM_all_cR(min1,:);
+    numPtS = sum(tArrR);
+    yVal = (MAM_all_cR(min1,min2)/numPtS*100);
+
+    colA = [0.3 0.3 0.3;1 0.2 0.2];
+
+    hold on
+    plot(xValR(Hr),yVal,['k' mt{msR(Hr)+1}],'markerfacecolor', colA(stR(Hr)+1,:))
+    text(xValR(Hr),yVal,labelR{Hr})
+
+end
+    
+grid on
+title(['Percent ' minsN{min1} ' neighbouring ' minsN{min2}])
+ylabel('%')
+set(gca,'XtickLabel',[],'fontsize',18)
+return
+saveJPGfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\binary\' mins{min1} '_' mins{min2}])
+savePDFfunction(f1,['D:\Code\Summer_2013_data\mineral_data\qemscan_tif\figures_revisedCol\mineralAssociations\binary\' mins{min1} '_' mins{min2}])
+

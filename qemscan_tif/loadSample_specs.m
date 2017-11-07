@@ -61,3 +61,10 @@ mxS = strcmp(varsS(keepLabS,3),'MX')
 msS = strcmp(varsS(keepLabS,3),'MS')
 groupS = datS(keepLabS-1,5)
 labelS = labelS(keepLabS-1)
+
+
+
+folderR = 'D:\Code\Summer_2013_data\mineral_data\qemscan_tif\sample_imDat_revisedCol\grain_basics\rock\concatenated files\';
+dummyV = load([folderR 'GL01RS01.mat']);
+ID = dummyV.isleD;
+fID = fields(ID)
